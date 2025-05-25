@@ -1,0 +1,134 @@
+#Import Libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.preprocessing import StandardScaler
+
+#Load and Clean Data
+df=pd.read_csv(r"C:\Users\Lenovo\Downloads\AI-Powered Prediction and Prevention of Digital.csv")
+print(df.head())
+df4=pd.DataFrame(df)
+df.dropna(inplace=True)
+df.drop_duplicates(inplace=True)
+print("Cleaned DataFrame Info:")
+# Basic Data Exploration
+df.info()
+df.describe()
+print("\nColumn Names:")
+print(df.columns)
+
+#Feature Selection and Data Splitting
+feature_columns = [
+    'Daily_Working_Hours',
+    'Screen_Time',
+    'Stress_Level',
+    'Mental_Fatigue_Score',
+    'Workload_Score',
+    'Keystroke_Frequency',
+    'Mouse_Movement_Distance',
+    'Software_Usage_Duration',
+    'Work_Environment',
+]
+existing_feature_columns = [col for col in feature_columns if col in df.columns]
+if len(existing_feature_columns) != len(feature_columns):
+    missing_columns = list(set(feature_columns) - set(existing_feature_columns))
+    print(f"Warning: The following feature columns were not found: {missing_columns}")
+feature_columns = existing_feature_columns
+
+X = df[feature_columns].copy() # Use .copy() to avoid SettingWithCopyWarning
+y = df['Daily_Working_Hours'].copy()
+
+# Handle potential non-numeric features
+if 'Work_Environment' in X.columns:
+    X['Work_Environment'] = X['Work_Environment'].astype('category').cat.codes
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+print("\nData Split Shapes:")
+print("X_train shape:", X_train.shape)
+print("X_test shape:", X_test.shape)
+print("y_train shape:", y_train.shape)
+print("y_test shape:", y_test.shape)
+# Scale Features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+#Model Training and Evaluation
+#classification model
+
+# Train Random Forest Classifier
+np.random.seed(42)
+
+# Simulate workload-related features
+time_series_data = np.random.rand(1000, 10)
+keystroke_data = np.random.rand(1000, 5)
+mouse_data = np.random.rand(1000, 5)
+software_usage_data = np.random.randint(0, 5, (1000, 3))
+fatigue_labels = np.random.randint(0, 2, 1000)  # 0: Normal, 1: Fatigue
+
+# Extract numeric columns from dataset
+numeric_columns = df.select_dtypes(include=np.number).columns
+time_series_data = np.array(df[numeric_columns[:10]], dtype=np.float32)
+
+# Define segments of data
+keystroke_data = np.array(df.iloc[:, 1:6], dtype=np.float32)
+mouse_data = np.array(df.iloc[:, 6:11], dtype=np.float32)
+software_usage_data = np.array(df[['Daily_Working_Hours', 'Screen_Time', 'Stress_Level']], dtype=np.float32)
+digital_fatigue_labels = np.array(df.iloc[:, -1], dtype=np.float32)  # Last column as label
+
+print(software_usage_data.shape)
+print(software_usage_data[:5])
+
+# Proceed with model training
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model.fit(software_usage_data, digital_fatigue_labels)
+pred_rf = rf_model.predict(software_usage_data)
+
+# Stacking Model for Ensemble Learning
+print(df.columns)
+software_usage_data = np.array(df[['Daily_Working_Hours', 'Screen_Time', 'Stress_Level']], dtype=np.float32)
+
+# Smart Break & Overwork Alert System
+alerts = []
+for i in range(len(pred_rf)):
+    if pred_rf[i] == 1:
+        alerts.append("ALERT: Take a Break! (Fatigue Detected)")
+    else:
+        alerts.append("Continue Working (No Fatigue Detected)")
+
+# Print Sample Alerts
+for i in range(10):
+    print(f'Employee_ID {i+1}: {alerts[i]}')
+
+#Scatter Plot Visualization
+df.plot.scatter(x='Productivity_Score', y='Stress_Level', color='purple', alpha=0.6)
+plt.title("Productivity vs. Stress Level")
+plt.xlabel("Productivity Score")
+plt.ylabel("Stress Level")
+plt.show()
+
+#countplot
+import seaborn as sns
+
+# Create a DataFrame for predictions
+fatigue_df = pd.DataFrame({'Fatigue_Status': np.where(pred_rf == 1, 'Fatigue Detected', 'No Fatigue Detected')})
+plt.figure(figsize=(6, 4))
+sns.countplot(data=fatigue_df, x='Fatigue_Status', palette=['green', 'red'])
+plt.xlabel('User Condition')
+plt.ylabel('Number of Users')
+plt.title('Fatigue Detection Count Plot')
+plt.show()
+numeric_df = df.select_dtypes(include=[np.number])
+corr_matrix = numeric_df.corr()
+
+# Plot the heatmap for our correlation matrix
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title("Correlation Matrix of Remote Work Metrics")
+plt.show()
