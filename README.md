@@ -16,6 +16,8 @@ The selected features are split into training and testing sets, and standardizat
 
 In addition to model training and prediction, the project includes comprehensive evaluation and visualization.This workflow effectively demonstrates the complete machine learning process feature selection, model training, prediction, and evaluation fulfilling the core objectives of predictive analysis using classification techniques.
 
- Output: [Output task 2.pdf](https://github.com/user-attachments/files/20430201/Output.task.2.pdf)
+ Output:
+[Output task 2.pdf](https://github.com/user-attachments/files/20430201/Output.task.2.pdf)
 
-<!-- Failed to upload "Output Recording 2025-05-24.mp4" -->
+https://github.com/user-attachments/assets/3316fd29-f1f0-4bec-b5c3-139cb8589fa7
+
