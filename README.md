@@ -1,14 +1,6 @@
-COMPANY NAME : CODETECH IT SOLUTIONS
-
 NAME : MOGANA HARINI U
 
-INTERN ID : CT04DF29
-
-DOMAIN : DATA ANALYTICS
-
-DURATION : 4 WEEKS
-
-MENTOR : NEELA SANTHOSH
+DOMAIN : Machine Learning with Predictive Analysis
 
 DESCRIPTION OF MY TASK 2 : "Predictive analysis using machine learning" is performed in this project to detect signs of digital fatigue based on user behavior and system usage data.The workflow begins with importing essential libraries and loading the dataset, followed by data cleaning steps such as removing missing values and duplicates to ensure the integrity of the data. "Feature selection" is performed to include relevant variables like screen time, stress level, workload score, and software usage patterns, which are critical for fatigue prediction. Categorical variables are encoded to prepare the data for model training.
 
